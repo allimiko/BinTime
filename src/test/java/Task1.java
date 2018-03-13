@@ -14,6 +14,7 @@ public class Task1  {
         open("https://www.centralpoint.nl/notebooks-laptops/");
         $$(".mobileSwitchFiltersOff .filterHead").first().click();
         $$(".mobileSwitchFiltersOff .filterHead").shouldHaveSize(18);
+        //
     }
 
 }

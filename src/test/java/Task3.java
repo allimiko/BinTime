@@ -1,28 +1,25 @@
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import io.restassured.response.Response;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-
-import static  io.restassured.RestAssured.*;
-import static  io.restassured.matcher.RestAssuredMatchers.*;
-import static  org.hamcrest.Matchers.*;
+import static io.restassured.RestAssured.when;
+import static org.hamcrest.Matchers.contains;
 
 /**
  * Created by superova on 14.03.2018.
  */
 public class Task3 {
+    public static Response response;
 
     @BeforeClass
-    public static void setupURL()
-    {
-        // here we setup the default URL and API base path to use throughout the tests
+    public static void setupURL() {
         RestAssured.baseURI = "http://restcountries.eu/rest/v1";
-
     }
 
     @Test
-    public void testStatusCode(){
+    public void testStatusCode() {
         when().
                 request("CONNECT", "/").
                 then().
@@ -30,12 +27,20 @@ public class Task3 {
     }
 
     @Test
-    public void testType(){
+    public void testType() {
+        response =
+                when().
+                        get("/").
+                        then().
+                        contentType(ContentType.JSON).
+                        extract().response();
+    }
+
+    @Test
+    public void borderTest() {
         when().
                 get("/").
                 then().
-                contentType(ContentType.JSON);
+                body("find {it.name == 'Latvia'}.borders", contains("BLR", "EST", "LTU", "RUS"));
     }
-
-
 }

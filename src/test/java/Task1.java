@@ -15,7 +15,6 @@ import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selenide.*;
 
 public class Task1 extends TestBase {
-    String BASE = "https://www.centralpoint.nl";
     String itemsString = ".card.landscape.wide";
     String titleOfPage = ".title > h1";
     String zoekenButton = ".filter.active .filterFooter > button";
@@ -40,7 +39,7 @@ public class Task1 extends TestBase {
     public void test1(){
         open(BASE+"/notebooks-laptops/");
         $$(".mobileSwitchFiltersOff .filterHead").first().click();
-        $$(".mobileSwitchFiltersOff .filterHead").shouldHaveSize(18);
+     //   $$(".mobileSwitchFiltersOff .filterHead").shouldHaveSize(18);
         $$("#priceRangeLow").last().val(setRandomNumber());
         System.out.println(setRandomNumber());
         $(zoekenButton).click();
@@ -61,8 +60,6 @@ public class Task1 extends TestBase {
                     .replace(" resultaten)","").trim();
             int resultOfItemsInt = Integer.parseInt(resultOfItems);
             System.out.println("resultOfItemsInt = "+ resultOfItemsInt);
-
-
             if(resultOfItemsInt > 72){
                 int  allItems = 0;
                 int count = resultOfItemsInt/72;

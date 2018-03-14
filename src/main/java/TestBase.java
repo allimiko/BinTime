@@ -10,6 +10,8 @@ import java.util.List;
  * Created by superova on 13.03.2018.
  */
 public class TestBase {
+  protected   String BASE = "https://www.centralpoint.nl";
+
     @BeforeSuite(alwaysRun = true)
     public void browser() {
         ChromeDriverManager.getInstance().setup();

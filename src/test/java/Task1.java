@@ -4,6 +4,7 @@
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -15,7 +16,7 @@ import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selenide.*;
 
 public class Task1 extends TestBase {
-    String itemsString = ".card.landscape.wide";
+    String itemsBlock = ".card.landscape.wide";
     String titleOfPage = ".title > h1";
     String zoekenButton = ".filter.active .filterFooter > button";
     String endUrl = "/notebooks-laptops/?priceRange=";
@@ -62,18 +63,27 @@ public class Task1 extends TestBase {
             System.out.println("resultOfItemsInt = "+ resultOfItemsInt);
             if(resultOfItemsInt > 72){
                 int  allItems = 0;
+                // take prices from first page
+                Document documentFirstPage = Jsoup.connect(BASE + endUrl +
+                        priceRangeLowString +"-"+priceRangeHighString).timeout(35000).get();
+                Elements itemsFirstPage = documentFirstPage.select(itemsBlock);
+                for(Element element : itemsFirstPage){
+                    Elements items = element.select(itemsBlock);
+                    allItems += items.size();
+                }
+
                 int count = resultOfItemsInt/72;
                 int countOfPages = count +1;
-                for(int i = 1; i<= countOfPages; i++){
+                for(int i = 2; i<= countOfPages; i++){
                     Document document = Jsoup.connect(BASE + endUrl +
                             priceRangeLowString +"-"+priceRangeHighString + "&shift=" + i).timeout(35000).get();
-                    Elements items = document.select(itemsString);
+                    Elements items = document.select(itemsBlock);
                     allItems += items.size();
                 }
                 System.out.println("allItems = " + allItems);
                 itemsOnThePage = allItems;
             }else {
-                itemsOnThePage = $$(itemsString).size();
+                itemsOnThePage = $$(itemsBlock).size();
             }
 
             System.out.println("itemsOnThePage = " + itemsOnThePage);

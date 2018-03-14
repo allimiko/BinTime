@@ -8,6 +8,7 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -29,7 +30,7 @@ public class Task2 extends TestBase {
 
  String price = ".price.priceExcl";
 
-Set<String> prices = new HashSet<String>();
+List<String> prices = new ArrayList<String>();
 
  @BeforeClass
     public void precondition() throws IOException {
@@ -46,12 +47,21 @@ Set<String> prices = new HashSet<String>();
      String resultOfItems =  $(titleOfPage).getText()
              .replace("Monitoren (","")
              .replace(" resultaten)","").trim();
+     // take prices from first page
+     Document documentFirstPage = Jsoup.connect(BASE + monitoren + priceRangeUrl +"1000-5000").timeout(35000).get();
+     Elements itemsFirstPage = documentFirstPage.select(price);
+     for(Element element : itemsFirstPage){
+         prices.add(element.text().replace(",-","").replace("excl. btw","").trim());
+     }
+
      int resultOfItemsInt = Integer.parseInt(resultOfItems);
      System.out.println("resultOfItemsInt = "+ resultOfItemsInt);
+
      int  allItems = 0;
      int count = resultOfItemsInt/72;
      int countOfPages = count +1;
-     for(int i = 1; i<= countOfPages; i++){
+     for(int i = 2; i<= countOfPages; i++){
+         // take prices from other pages
          Document document = Jsoup.connect(BASE + monitoren + priceRangeUrl +"1000-5000&shift=" + i).timeout(35000).get();
          System.out.println(BASE + priceRangeUrl +"1000-5000&shift=" + i);
          Elements items = document.select(price);

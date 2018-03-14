@@ -2,7 +2,6 @@
  * Created by superova on 13.03.2018.
  */
 
-import com.codeborne.selenide.Condition;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -10,10 +9,9 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
-import java.util.Random;
 
-import static com.codeborne.selenide.Condition.*;
-import static com.codeborne.selenide.Selectors.byText;
+import static com.codeborne.selenide.Condition.not;
+import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selenide.*;
 
 public class Task1 extends TestBase {

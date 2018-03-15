@@ -1,24 +1,18 @@
 import io.restassured.RestAssured;
-import io.restassured.matcher.ResponseAwareMatcher;
-import io.restassured.response.Response;
+import io.restassured.http.ContentType;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import java.util.List;
 
-import static io.restassured.RestAssured.get;
-import static io.restassured.RestAssured.given;
-import static io.restassured.RestAssured.when;
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.greaterThan;
-import static org.hamcrest.Matchers.lessThan;
+import static io.restassured.RestAssured.*;
 
 /**
  * Created by superova on 14.03.2018.
  */
-public class Task4 {
-    float area;
+public class Task4 extends TestBaseRest {
+    private float area;
 
     @BeforeClass
     public static void setupURL() {
@@ -26,17 +20,27 @@ public class Task4 {
     }
 
     @Test
-    public void testStatusCode(){
+    public void testType() {
+        response =
+                when().
+                        get("/").
+                        then().
+                        contentType(ContentType.JSON).
+                        extract().response();
+    }
+
+    @Test
+    public void testStatusCode() {
         given().when().get("/").then().statusCode(200);
     }
 
     @Test(dependsOnMethods = "outputValues")
-    public void testUkraine(){
+    public void testUkraine() {
         Assert.assertTrue(area > 500000.0);
     }
 
     @Test
-    public void outputValues(){
+    public void outputValues() {
         String name = get("").path("find {it.name == 'Ukraine'}.name");
         System.out.println(name);
         String capital = get("").path("find {it.name == 'Ukraine'}.capital");
@@ -46,8 +50,8 @@ public class Task4 {
         int population = get("").path("find {it.name == 'Ukraine'}.population");
         System.out.println(population);
         List<String> borders = get("").path("find {it.name == 'Ukraine'}.borders");
-       // borders.forEach(n -> System.out.println(n));  или так
-        for(String s : borders){
+        // borders.forEach(n -> System.out.println(n));  или так
+        for (String s : borders) {
             System.out.print(s + " ");
         }
         area = get("").path("find {it.name == 'Ukraine'}.area");
